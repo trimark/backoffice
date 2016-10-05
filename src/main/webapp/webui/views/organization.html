@@ -1,0 +1,115 @@
+<div class="container-fluid" ng-controller="OrganizationController as ctrl">
+	<div class="row">
+		<div class="col-lg-12">
+	        <div class="panel panel-default">
+	            <div class="panel-heading">Organization Form</div>
+				<div class="panel-body">
+	                <form ng-submit="ctrl.submit()" name="myForm">
+					<div class="form-horizontal">
+						<uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="alert.close()" dismiss-on-timeout="30000">{{ alert.msg }}</uib-alert>
+	                    <input type="hidden" ng-model="ctrl.organization.id" />
+                        <div class="form-group" ng-class="{ 'has-error': myForm.name.$dirty && (myForm.name.$error.required || myForm.name.$error.maxlength)}">
+                            <label class="col-sm-2 control-lable" for="name">Organization Name</label>
+                            <div class="col-sm-4">
+                                <input type="text" ng-model="ctrl.organization.organizationname" name="name" ng-maxlength="50" class="form-control input-sm" placeholder="Enter Organization Name" ng-pattern="VALID_PATTERN" required/>
+                                <span ng-show="myForm.name.$dirty && myForm.name.$error.required" class="help-block">Organization Name is a required field</span>
+                                <span ng-show="myForm.name.$dirty && myForm.name.$error.maxlength" class="help-block">Organization Name is too long</span>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': myForm.desc.$dirty && (myForm.desc.$error.required || myForm.desc.$error.maxlength)}">
+                            <label class="col-sm-2 control-lable" for="desc">Description</label>
+                            <div class="col-sm-4">
+                                <input type="text" ng-model="ctrl.organization.organizationdesc" name="desc" ng-maxlength="255" class="form-control input-sm" placeholder="Enter Organization Description" required/>
+                                <span ng-show="myForm.desc.$dirty && myForm.desc.$error.required" class="help-block">Organization Description is a required field</span>
+                                <span ng-show="myForm.desc.$dirty && myForm.desc.$error.maxlength" class="help-block">Organization Description is too long</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-lable" for="parent">Parent Organization</label>
+							<div class="col-sm-4">
+								<select name="parent" class="form-control input-sm" 
+						              ng-model="ctrl.organization.parent"
+						              ng-options="organization as organization.organizationdesc group by organization.parent.organizationdesc for organization in ctrl.organizations track by organization.id | orderBy:'organizationdesc'">
+						              <option value="">-Select Parent Organization-</option>
+								</select>
+							</div>                    
+                        </div>
+						<div class="form-group" >
+						{{ctrl.organizations | json}}
+							<div class="col-sm-offset-2 col-sm-10">
+								<div ng-if="!ctrl.organization.id">
+					                <input type="submit"  value="Add" class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid">
+					                <button type="button" ng-click="ctrl.reset()" class="btn btn-warning btn-sm" ng-disabled="myForm.$pristine">Reset</button>
+								</div>
+								<div ng-if="ctrl.organization.id">
+					                <input type="submit"  value="Update" class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid">
+					                <button type="button" ng-click="ctrl.cancel()" class="btn btn-warning btn-sm" >Cancel</button>
+								</div>
+                            </div>
+                        </div>
+                    </div>
+	                </form>
+	            </div>
+	        </div>    
+	     </div>    
+	</div>    
+	<div class="row">
+		<div class="col-lg-12">
+	        <div class="panel panel-default">
+	            <div class="panel-heading">List of Organizations</div>
+				<div class="panel-body">
+	                <table class="table table-bordered">
+				        <colgroup>
+							<col class="col-sm-1">
+							<col class="col-sm-4">
+							<col class="col-sm-5">
+							<col class="col-sm-2">
+				        </colgroup>
+	                    <thead>
+	                        <tr>
+	                            <th>ID</th>
+	                            <th><a href="" ng-click="order('organizationname')">Organization Name 
+	                            <span class="glyphicon sort-icon" ng-show="filterParams.predicate=='organizationname'" ng-class="{'glyphicon-chevron-up':filterParams.reverse,'glyphicon-chevron-down':!filterParams.reverse}"></span></a></th>
+	                            <th><a href="" ng-click="order('organizationdesc')">Organization Description 
+	                            <span class="glyphicon sort-icon" ng-show="filterParams.predicate=='organizationdesc'" ng-class="{'glyphicon-chevron-up':filterParams.reverse,'glyphicon-chevron-down':!filterParams.reverse}"></span></a></th>
+	                            <th>Action</th>
+	                        </tr>
+	                    </thead>
+	                    <tbody>
+				           <tr>  
+				             <td>Filter</td>  
+				             <td><input type="text" ng-model="filterParams.organizationname" /></td>  
+				             <td><input type="text" ng-model="filterParams.organizationdesc" /> </td>  
+				             <td style="text-align: center"><button type="button" ng-click="clearFilter()" class="btn btn-primary btn-sm">Clear Filter</button></td>  
+				           </tr>  
+	                        <tr ng-repeat="u in filteredList | filter:paginate">
+	                            <td><span ng-bind="u.id"></span></td>
+	                            <td><span ng-bind="u.organizationname"></span></td>
+	                            <td><span ng-bind="u.organizationdesc"></span></td>
+	                            <td style="text-align: center">
+	                            <button type="button" ng-click="ctrl.edit(u.id)" class="btn btn-success btn-sm">Edit</button>  
+	                            <button type="button" ng-click="ctrl.remove(u)" class="btn btn-danger btn-sm">Remove</button>
+	                            </td>
+	                        </tr>
+	                    </tbody>
+						<tfoot> 
+							<tr> 
+								<td colspan="4">
+								    <uib-pagination 
+								      ng-model="currentPage"
+								      total-items="filteredList.length"
+								      items-per-page="numPerPage" 
+								      max-size="noOfPages"  
+								      boundary-links="true">
+								    </uib-pagination>
+								</td>
+							</tr> 
+						</tfoot>
+	                </table>
+					</div>
+	            </div>
+	        </div>
+	    </div>		
+	</div>
+</div>
+    

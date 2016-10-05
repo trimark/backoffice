@@ -1,0 +1,45 @@
+<div class="modal-header">
+	<button type="button" class="close" ng-click="modalOptions.close()" aria-hidden="true">&times;</button>
+</div>
+<div class="modal-body">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-lg-12">
+		        <div class="panel panel-default">
+		            <div class="panel-heading">{{modalOptions.headerText}}</div>
+					<div class="panel-body">
+		                <table class="table table-bordered">
+					        <colgroup>
+								<col class="col-sm-4">
+								<col class="col-sm-8">
+					        </colgroup>
+		                    <thead>
+		                        <tr>
+		                            <th>Field</th>
+		                            <th>Value</th>
+		                        </tr>
+		                    </thead>
+		                    <tbody>
+		                        <tr ng-repeat="(key,value) in modalOptions.bodyDetails" >
+		                            <td><span ng-bind="key"></span></td>
+		                            <td>
+		                            	<span ng-if="!isArray(value)" ng-bind="value"></span>
+	                            	    <ul ng-if="isArray(value)" ng-repeat="(k,val) in value track by $index" style="list-style-type: none; padding-left:0;">
+	                            	    	<li ng-repeat="(j,v) in val">{{j}} - {{v}}</li>
+									    </ul>
+		                            </td>
+		                        </tr>
+		                    </tbody>
+		                </table>
+		            </div>
+		        </div>
+		    </div>		
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn" 
+          data-ng-click="modalOptions.close()">{{modalOptions.closeButtonText}}</button>
+	<button class="btn btn-primary" 
+          data-ng-click="modalOptions.ok()">{{modalOptions.actionButtonText}}</button>
+</div>

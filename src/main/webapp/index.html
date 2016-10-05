@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html ng-app="TGWeb" lang="en">
+    <meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+    <title>Trimark Backoffice</title>
+
+    <link rel="stylesheet" href="res/js/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="res/css/main.css" />
+
+	<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+
+    <script src="res/js/jquery/dist/jquery.min.js"></script>
+    <script src="res/js/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="res/js/angular/angular.min.js"></script>
+    <script src="res/js/angular-animate/angular-animate.min.js"></script>
+    <script src="res/js/angular-route/angular-route.min.js"></script>
+    <script src="res/js/angular-resource/angular-resource.min.js"></script>
+    <script src="res/js/angular-messages/angular-messages.min.js"></script>
+    <script src="res/js/angular-cookies/angular-cookies.min.js"></script>
+    <script src="res/js/angular-ui/angular-ui-bootstrap.min.js"></script>
+    <script src="res/js/angular-filter/angular-filter.min.js"></script>
+    <script src="res/js/cryptojs/rollups/aes.js"></script>
+    <script src="res/js/cryptojs/rollups/pbkdf2.js"></script>
+    <script src="webui/modules/Common.js"></script>
+    <script src="webui/modules/FlashMessage.js"></script>
+    <script src="webui/modules/App.js"></script>
+    <script src="webui/modules/Admin.js"></script>
+    <script src="webui/modules/Auth.js"></script>
+    <script src="webui/controllers/AdminController.js"></script>
+    <script src="webui/controllers/AppController.js"></script>
+    <script src="webui/controllers/HomeController.js"></script>
+    <script src="webui/controllers/LoginController.js"></script>
+    <script src="webui/controllers/RegisterController.js"></script>
+    <script src="webui/controllers/UserController.js"></script>
+    <script src="webui/controllers/RoleController.js"></script>
+    <script src="webui/controllers/PermissionController.js"></script>
+    <script src="webui/controllers/OrganizationController.js"></script>
+    <script src="webui/controllers/BodyController.js"></script>
+    <script src="webui/services/AppService.js"></script>
+    <script src="webui/services/AuthService.js"></script>
+    <script src="webui/services/UserService.js"></script>
+    <script src="webui/services/RoleService.js"></script>
+    <script src="webui/services/PermissionService.js"></script>
+    <script src="webui/services/OrganizationService.js"></script>
+    <script src="webui/services/ModalService.js"></script>
+    <script src="webui/services/AlertService.js"></script>
+    <script src="webui/TGWeb.js"></script>
+</head>
+<body class="ng-cloak" ng-controller="BodyController">
+	<nav class="navbar navbar-inverse navbar-fixed-top nav-bar-main" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+	            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+	                <span class="sr-only">Toggle navigation</span>
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	            </button>
+	            <a ng-show="currentUser" class="navbar-brand" href="#menu-toggle" id="menu-toggle"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span></a>
+	            <a href=""><img class="header-logo" src="res/images/trimark_logo_red.png"/></a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right"">
+                    <li ng-if="!currentUser" ><a href="#/login"><i class="glyphicon glyphicon-log-in"></i> Log In</a></li>
+                    <li ng-if="currentUser" class="dropdown"><a href="" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-user"></i><b class="caret"></b> {{currentUser.displayName}} </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#/app"><i class="glyphicon glyphicon-dashboard"></i> Dashboard</a></a></li>
+                            <li><a href="#/changepw"><i class="glyphicon glyphicon-edit"></i> Change Password</a></a></li>
+                        </ul>
+                    </li>
+                    <li ng-if="currentUser" ><a ng-controller="AppController as app" ng-click="app.logout()" style="cursor: pointer;"><i class="glyphicon glyphicon-log-out"></i> Log Out</a></li>
+                </ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="wrapper" class="{{currentUser?'':'toggled'}}">
+    <div class="container-fluid">
+		<div id="left-panel">
+			<div class="panel panel-default main-nav-panel" ng-show="currentUser">
+				<div class="panel-heading">
+					<button type="button" class="btn btn-default" data-toggle="tooltip"  data-placement="bottom" title="Home" id="home">
+						<span class="glyphicon glyphicon-home"></span>
+					</button>
+					<button type="button" class="btn btn-default" data-toggle="tooltip"  data-placement="bottom" title="Scratchcards">
+						<span class="glyphicon glyphicon-th"></span>
+					</button>
+					<button type="button" class="btn btn-default" data-toggle="tooltip"  data-placement="bottom" data-target=".panel-body" title="Administration">
+						<span class="glyphicon glyphicon-user"></span>
+					</button>
+				</div>
+				<div class="panel-body">
+					<ul class="side-nav">
+						<li>
+							<a href="" data-toggle="collapse" data-target="#lotteryMenu">Lotteries <i class="glyphicon glyphicon-chevron-down"></i></a>
+							<ul class="side-nav sub collapse out" id="lotteryMenu">
+								<li>
+									<a href="">Create New Lottery</a>
+								</li>
+								<li>
+									<a href="">List all Lotteries</a>
+								</li>
+							</ul> 
+						</li>
+						<li>
+							<a href="" data-toggle="collapse" data-target="#streamMenu">Streams <i class="glyphicon glyphicon-chevron-down"></i></a>
+							<ul class="side-nav sub collapse out" id="streamMenu">
+								<li>
+									<a href="">List all Streams</a>
+								</li>
+							</ul> 
+						</li>
+						<li>
+							<a href="" data-toggle="collapse" data-target="#batchMenu">Batches <i class="glyphicon glyphicon-chevron-down"></i></a>
+							<ul class="side-nav sub collapse out" id="batchMenu">
+								<li>
+									<a href="">List all Batches</a>
+								</li>
+							</ul> 
+						</li>
+						<li>
+							<a href="" data-toggle="collapse" data-target="#gameMenu">Games</a>
+						</li>
+						<li>
+							<a href="" data-toggle="collapse" data-target="#reportMenu">Reports</a>
+						</li>
+						<li>
+							<a href="" data-toggle="collapse" data-target="#settingMenu">Settings <i class="glyphicon glyphicon-chevron-down"></i></a>
+							<ul class="side-nav sub collapse out" id="settingMenu">
+								<li>
+									<a href="">Models</a>
+									<ul class="side-nav sub">
+										<li>
+											<a href="">Create new Model</a>
+										</li>
+										<li>
+											<a href="">List all Models</a>
+										</li>
+									</ul> 
+								</li>
+							</ul> 
+						</li>
+						<li>
+							<a href="" allowed="ROLE_ADMIN" data-toggle="collapse" data-target="#adminMenu">Administration <i class="glyphicon glyphicon-chevron-down"></i></a>
+							<ul class="side-nav sub collapse out" id="adminMenu">
+								<li><a href="#/organization" allowed="ROLE_ADMIN">Organization Management</a></li>  
+								<li><a href="#/user" allowed="ROLE_ADMIN">User Management</a></li>  
+								<li><a href="#/role" allowed="ROLE_ADMIN">Role Management</a></li>
+								<li><a href="#/permission" allowed="ROLE_ADMIN">Permission Management</a></li>
+							</ul> 
+						</li>
+						<li>
+							<a href="">Contact</a>
+						</li>
+					</ul> 
+				</div>
+			</div>
+		</div>
+		<!-- /#left-panel -->
+
+
+		<div id="main-panel">
+		    <div ng-view></div>
+		</div>
+		<!-- /#main-panel -->
+
+	</div>
+	</div>
+	<!-- /#wrapper -->
+
+	<script>
+		$(function() {
+			$('#home, #menu-toggle').click(function(e)
+			{
+				e.preventDefault();
+				$('#wrapper').toggleClass('toggled');
+				//$('.menu-toggle').toggleClass('hide');
+				
+			});
+
+			$('[data-toggle="tooltip"]').tooltip();
+
+			$('[data-toggle=collapse]').click(function(){
+				// toggle icon
+				$(this).find("i").toggleClass("glyphicon-chevron-right glyphicon-chevron-down");
+			});
+
+			$(document).on('click','.navbar-collapse.in',function(e) {
+			    if( $(e.target).is('a') && $(e.target).attr('class') != 'dropdown-toggle' ) {
+			        $(this).collapse('hide');
+			    }
+			});		
+
+			$(document).on('click','.side-nav.in',function(e) {
+			    if( $(e.target).is('a') && $(e.target).attr('class') != 'dropdown-toggle' ) {
+					e.preventDefault();
+			    	$('#wrapper').toggleClass('toggled');
+			    }
+			});		
+		});
+	</script>
+
+</body>
+</html>

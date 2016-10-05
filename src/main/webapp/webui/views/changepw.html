@@ -1,0 +1,43 @@
+<div class="container-fluid">
+	<div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+	        <div class="panel panel-default" ng-controller="AppController as lc">
+	            <div class="panel-heading">Change Password</div>
+				<div class="panel-body">
+			        <div ng-show="lc.error" class="alert alert-danger">{{lc.error}}</div>
+			        <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="alert.close()" dismiss-on-timeout="30000">{{ alert.msg }}</uib-alert>
+			        <form name="form" ng-submit="lc.changepw()" role="form">
+			            <fieldset ng-disabled="isSubmitted">
+			            <!-- 
+			            <div class="form-group" ng-class="{ 'has-error': form.opassword.$dirty && (form.opassword.$error.required || form.opassword.$error.maxlength) }">
+			                <label for="password">Old Password</label>
+			                <input type="password" name="opassword" id="opassword" ng-maxlength="60" class="form-control" ng-model="oldpassword" required />
+			                <span ng-show="form.opassword.$dirty && form.opassword.$error.required" class="help-block">Old Password is required</span>
+			                <span ng-show="form.opassword.$dirty && form.opassword.$error.maxlength" class="help-block">Old Password is too long</span>
+			            </div>
+			             -->
+			            <div class="form-group" ng-class="{ 'has-error': form.password.$dirty && (form.password.$error.required || form.password.$error.maxlength) }">
+			                <label for="password">New Password</label>
+			                <input type="password" name="password" id="password" ng-maxlength="60" class="form-control" ng-model="newpassword" required />
+			                <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">New Password is required</span>
+			                <span ng-show="form.password.$dirty && form.password.$error.maxlength" class="help-block">New Password is too long</span>
+			            </div>
+			            <div class="form-group" ng-class="{ 'has-error': form.vpassword.$dirty && (form.vpassword.$invalid || form.vpassword.$error.maxlength)}">
+			                <label for="password">Verify Password</label>
+			                <input type="password" name="vpassword" id="vpassword" ng-maxlength="60" class="form-control" ng-model="newvpassword" required compare-to="newpassword" />
+			                <span ng-show="form.vpassword.$dirty && form.vpassword.$invalid" class="help-block">Password don't match</span>
+			                <span ng-show="form.vpassword.$dirty && form.vpassword.$error.maxlength" class="help-block">Verify Password is too long</span>
+			            </div>
+			            <div class="form-actions" >
+			                <button type="submit" ng-disabled="form.$invalid || dataLoading" class="btn btn-primary">Change Password</button>
+			                <img ng-if="lc.dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+			                <a href="#/home" class="btn btn-link">Cancel</a>
+			            </div>
+			            </fieldset>
+			        </form>
+			    </div>
+		    </div>
+	    </div>
+	</div>
+</div>
+    

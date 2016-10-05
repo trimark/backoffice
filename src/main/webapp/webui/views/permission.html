@@ -1,0 +1,139 @@
+<div class="container-fluid" ng-controller="PermissionController as ctrl">
+	<div class="row">
+		<div class="col-lg-12">
+	        <div class="panel panel-default">
+	            <div class="panel-heading">Permission Form</div>
+				<div class="panel-body">
+	                <form ng-submit="ctrl.submit()" name="myForm">
+					<div class="form-horizontal">
+						<uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="alert.close()" dismiss-on-timeout="30000">{{ alert.msg }}</uib-alert>
+	                    <input type="hidden" ng-model="ctrl.permission.id" />
+                        <div class="form-group" ng-class="{ 'has-error': myForm.name.$dirty && (myForm.name.$error.required || myForm.name.$error.maxlength || myForm.name.$error.pattern)}">
+                            <label class="col-sm-2 control-lable" for="name">Permission Name</label>
+                            <div class="col-sm-4">
+                                <input type="text" ng-model="ctrl.permission.permissionname" name="name" ng-maxlength="50" class="form-control input-sm" placeholder="Enter Permission Name" ng-pattern="VALID_PATTERN" required/>
+                                <span ng-show="myForm.name.$dirty && myForm.name.$error.required" class="help-block">Permission Name is a required field</span>
+                                <span ng-show="myForm.name.$dirty && myForm.name.$error.maxlength" class="help-block">Permission Name is too long</span>
+                                <span ng-show="myForm.name.$dirty && myForm.name.$error.pattern" class="help-block">Permission Name must be capital letters, numbers and underscore only</span>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': myForm.desc.$dirty && (myForm.desc.$error.required || myForm.desc.$error.maxlength)}">
+                            <label class="col-sm-2 control-lable" for="desc">Description</label>
+                            <div class="col-sm-4">
+                                <input type="text" ng-model="ctrl.permission.permissiondesc" name="desc" ng-maxlength="255" class="form-control input-sm" placeholder="Enter Permission Description" required/>
+                                <span ng-show="myForm.desc.$dirty && myForm.desc.$error.required" class="help-block">Permission Description is a required field</span>
+                                <span ng-show="myForm.desc.$dirty && myForm.desc.$error.maxlength" class="help-block">Permission Description is too long</span>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': myForm.group.$dirty && myForm.group.$error.required}">
+                            <label class="col-sm-2 control-lable" for="group">Group</label>
+							<div class="col-sm-4">
+								<select name="group" class="form-control input-sm" required
+						              ng-model="ctrl.permission.group"
+						              ng-options="group.groupname as group.groupname for group in ctrl.groups">
+						              <option value="">-Select Group-</option>
+								</select>
+                                <span ng-show="myForm.group.$dirty && myForm.group.$error.required">Group is a required field</span>
+							</div>                    
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': myForm.category.$dirty && myForm.category.$error.required}">
+                            <label class="col-sm-2 control-lable" for="category">Category</label>
+							<div class="col-sm-4">
+								<select name="category" class="form-control input-sm" required
+						              ng-model="ctrl.permission.category" ng-disabled="!ctrl.permission.group"
+						              ng-options="category.catname as category.catname for category in ctrl.categories | filter:{groupname: ctrl.permission.group}">
+						              <option value="">-Select Category-</option>
+								</select>
+                                <span ng-show="myForm.category.$dirty && myForm.category.$error.required">Group is a required field</span>
+							</div>                    
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': myForm.rights.$dirty && myForm.rights.$error.required}">
+                            <label class="col-sm-2 control-lable" for="rights">Rights</label>
+							<div class="col-sm-4">
+								<select name="rights" class="form-control input-sm"
+						              ng-model="ctrl.permission.rights" ng-disabled="!ctrl.permission.category"
+						              ng-options="rights.rightsname as rights.rightsname for rights in ctrl.rightslist">
+						              <option value="">-Select Rights-</option>
+								</select>
+                                <span ng-show="myForm.rights.$dirty && myForm.rights.$error.required">Rights is a required field</span>
+							</div>                    
+                        </div>
+						<div class="form-group" >
+							<div class="col-sm-offset-2 col-sm-10">
+								<div ng-if="!ctrl.permission.id">
+					                <input type="submit"  value="Add" class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid">
+					                <button type="button" ng-click="ctrl.reset()" class="btn btn-warning btn-sm" ng-disabled="myForm.$pristine">Reset</button>
+								</div>
+								<div ng-if="ctrl.permission.id">
+					                <input type="submit"  value="Update" class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid">
+					                <button type="button" ng-click="ctrl.cancel()" class="btn btn-warning btn-sm" >Cancel</button>
+								</div>
+                            </div>
+                        </div>
+                    </div>
+	                </form>
+	            </div>
+	        </div>    
+	     </div>    
+	</div>    
+	<div class="row">
+		<div class="col-lg-12">
+	        <div class="panel panel-default">
+	            <div class="panel-heading">List of Permissions</div>
+				<div class="panel-body">
+	                <table class="table table-bordered">
+				        <colgroup>
+							<col class="col-sm-1">
+							<col class="col-sm-4">
+							<col class="col-sm-5">
+							<col class="col-sm-2">
+				        </colgroup>
+	                    <thead>
+	                        <tr>
+	                            <th>ID</th>
+	                            <th><a href="" ng-click="order('permissionname')">Permission Name 
+	                            <span class="glyphicon sort-icon" ng-show="filterParams.predicate=='permissionname'" ng-class="{'glyphicon-chevron-up':filterParams.reverse,'glyphicon-chevron-down':!filterParams.reverse}"></span></a></th>
+	                            <th><a href="" ng-click="order('permissiondesc')">Permission Description 
+	                            <span class="glyphicon sort-icon" ng-show="filterParams.predicate=='permissiondesc'" ng-class="{'glyphicon-chevron-up':filterParams.reverse,'glyphicon-chevron-down':!filterParams.reverse}"></span></a></th>
+	                            <th>Action</th>
+	                        </tr>
+	                    </thead>
+	                    <tbody>
+				           <tr>  
+				             <td>Filter</td>  
+				             <td><input type="text" ng-model="filterParams.permissionname" /></td>  
+				             <td><input type="text" ng-model="filterParams.permissiondesc" /> </td>  
+				             <td style="text-align: center"><button type="button" ng-click="clearFilter()" class="btn btn-primary btn-sm">Clear Filter</button></td>  
+				           </tr>  
+	                        <!-- tr ng-repeat="u in ctrl.permissions.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage))" -->
+	                        <tr ng-repeat="u in filteredList | filter:paginate">
+	                            <td><span ng-bind="u.id"></span></td>
+	                            <td><span ng-bind="u.permissionname"></span></td>
+	                            <td><span ng-bind="u.permissiondesc"></span></td>
+	                            <td style="text-align: center">
+	                            <button type="button" ng-click="ctrl.edit(u.id)" class="btn btn-success btn-sm">Edit</button>  
+	                            <button type="button" ng-click="ctrl.remove(u)" class="btn btn-danger btn-sm">Remove</button>
+	                            </td>
+	                        </tr>
+	                    </tbody>
+						<tfoot> 
+							<tr> 
+								<td colspan="4">
+								    <uib-pagination 
+								      ng-model="currentPage"
+								      total-items="filteredList.length"
+								      items-per-page="numPerPage" 
+								      max-size="noOfPages"  
+								      boundary-links="true">
+								    </uib-pagination>
+								</td>
+							</tr> 
+						</tfoot>
+	                </table>
+					</div>
+	            </div>
+	        </div>
+	    </div>		
+	</div>
+</div>
+    

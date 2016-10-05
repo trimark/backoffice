@@ -1,0 +1,67 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:c="http://www.springframework.org/schema/c"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+			http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+
+	<global-method-security
+	    secured-annotations="enabled" 
+	    pre-post-annotations="enabled">
+		<expression-handler ref="expressionHandler"/>
+	</global-method-security>
+	
+	<http create-session="ifRequired"
+          entry-point-ref="unauthorizedEntryPoint"
+          authentication-manager-ref="restAuthenticationManager"
+          use-expressions="true">
+
+        <intercept-url pattern="/*" access="permitAll" />
+		<!-- intercept-url pattern="/api/**" access="isFullyAuthenticated()"/-->
+		<intercept-url pattern="/webui/views/home.html" access="isAuthenticated()"/>
+		<intercept-url pattern="/webui/views/dashboard.html" access="isAuthenticated()"/>
+		<intercept-url pattern="/webui/views/changepw.html" access="isAuthenticated()"/>
+		<intercept-url pattern="/webui/views/user.html" access="hasAnyAuthority('ROLE_ADMIN')"/>
+		<intercept-url pattern="/webui/views/role.html" access="hasAnyAuthority('ROLE_ADMIN')"/>
+		<intercept-url pattern="/webui/views/permission.html" access="hasAnyAuthority('ROLE_ADMIN')"/>
+		<intercept-url pattern="/webui/views/organization.html" access="hasAnyAuthority('ROLE_ADMIN')"/>
+        <intercept-url pattern="/home" access="permitAll" />
+        <intercept-url pattern="/favicon.ico" access="permitAll"/>
+        <intercept-url pattern="../../../webapp/webui/views/common/footer.html" access="permitAll" />
+        <intercept-url pattern="../../../webapp/res/css/app.css" access="permitAll" />
+        <intercept-url pattern="../../../webapp/res/js/angular-cookies/angular-cookies.js" access="permitAll" />
+
+        <!-- CSRF Token Config -->
+        <!-- 
+        <csrf token-repository-ref="csrfTokenRepository"/>
+        <custom-filter ref="csrfHeaderFilter" after="CSRF_FILTER"/>
+        <custom-filter ref="restAuthFilter" position="BASIC_AUTH_FILTER" />
+        <custom-filter ref="statelessAuthFilter" before="BASIC_AUTH_FILTER" />
+        FORM_LOGIN_FILTER
+         -->
+         <csrf disabled="true"/>
+         <custom-filter ref="restAuthenticationFilter" position="PRE_AUTH_FILTER"/>
+         <access-denied-handler ref="accessDeniedHandler" />
+    </http>
+
+    <beans:bean id="bCryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+
+    <beans:bean id="unauthorizedEntryPoint" class="com.trimark.backoffice.auth.RESTAuthenticationEntryPoint" />
+
+	<beans:bean id="userDetailsServiceImpl" class="com.trimark.backoffice.service.impl.UserDetailsServiceImpl" />
+
+    <authentication-manager id="restAuthenticationManager">
+		<authentication-provider user-service-ref="userDetailsServiceImpl" >
+			<password-encoder ref="bCryptPasswordEncoder"/>
+		</authentication-provider>
+    </authentication-manager>
+
+    <!-- beans:bean id="restAuthenticationFilter" class="com.trimark.backoffice.auth.AuthenticationTokenProcessingFilter" /-->
+    <beans:bean id="restAuthenticationFilter" class="com.trimark.backoffice.auth.JWTTokenAuthFilter" />
+
+	<beans:bean id="accessDeniedHandler" class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+		<beans:property name="errorPage" value="/webui/views/access-denied.html"/>
+	</beans:bean>
+	
+	<beans:bean id="expressionHandler" class="com.trimark.backoffice.auth.MyMethodSecurityExpressionHandler"/>
+</beans:beans>

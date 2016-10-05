@@ -1,0 +1,44 @@
+<configuration>
+	<property resource="app.properties" />
+	
+	<!-- >property name="LOGS_PATH" value="c:/logs" /-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+        </layout>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${LOGS_PATH}/com.trimark.backoffice.log</file>
+
+        <layout class="ch.qos.logback.classic.PatternLayout">
+          <Pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</Pattern>
+        </layout>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- rollover daily -->
+			<fileNamePattern>${LOGS_PATH}/archived/com.trimark.backoffice.%d{yyyy-MM-dd}.%i.log
+                        </fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>${FILE_SIZE}</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+	
+<!-- 	
+	<logger name="org.springframework.security" level="ALL" additivity="false">
+	    <appender-ref ref="STDOUT" />
+	    <appender-ref ref="FILE" />
+	</logger>
+	
+	<logger name="org.springframework.web" level="ALL" additivity="false">
+	    <appender-ref ref="STDOUT" />
+	    <appender-ref ref="FILE" />
+	</logger>
+ -->
+    <root level="${LOG_LEVEL}">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>

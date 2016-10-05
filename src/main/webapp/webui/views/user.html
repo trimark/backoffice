@@ -1,0 +1,134 @@
+<div class="container-fluid" ng-controller="UserController as ctrl">
+	<div class="row" ng-if="ctrl.user.id">
+		<div class="col-lg-12">
+	        <div class="panel panel-default">
+	            <div class="panel-heading">User Form</div>
+				<div class="panel-body">
+	                <form ng-submit="ctrl.submit()" name="myForm" >
+					<div class="form-horizontal">
+	                    <input type="hidden" ng-model="ctrl.user.id" />
+                        <div class="form-group" ng-class="{ 'has-error': myForm.name.$dirty && (myForm.name.$error.required || myForm.name.$error.maxlength)}">
+                            <label class="col-sm-2 control-lable" for="name">User Name</label>
+                            <div class="col-sm-4">
+                                <input type="text" ng-model="ctrl.user.displayName" name="name" ng-maxlength="255" class="form-control input-sm" placeholder="Enter User Name" required/>
+                                <span ng-show="myForm.name.$dirty && myForm.name.$error.required" class="help-block">User Name is a required field</span>
+                                <span ng-show="myForm.name.$dirty && myForm.name.$error.maxlength" class="help-block">User Name is too long</span>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': myForm.email.$dirty && (myForm.email.$error.required || myForm.email.$error.maxlength || myForm.email.$error.email)}">
+                            <label class="col-sm-2 control-lable" for="email">Email</label>
+                            <div class="col-sm-4">
+                                <input type="email" ng-model="ctrl.user.email" name="email" ng-maxlength="255" class="form-control input-sm" placeholder="Enter Email" required/>
+                                <span ng-show="myForm.email.$dirty && myForm.email.$error.required">Email is a required field</span>
+                                <span ng-show="myForm.email.$dirty && myForm.email.$error.maxlength">Email is too long</span>
+                                <span ng-show="myForm.email.$dirty && myForm.email.$error.email">Email is invalid</span>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': myForm.role.$dirty && myForm.role.$error.required}">
+                            <label class="col-sm-2 control-lable" for="role">Role</label>
+							<div class="col-sm-4" ng-controller="RoleController as rctrl">
+								<select name="role" class="form-control input-sm" required
+						              ng-model="ctrl.user.role"
+						              ng-options="role as role.roledesc for role in rctrl.roles track by role.id">
+						              <option value="">-Select Role-</option>
+								</select>
+                                <span ng-show="myForm.role.$dirty && myForm.role.$error.required">Role is a required field</span>
+							</div>                    
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error': myForm.enabled.$dirty && myForm.enabled.$error.required}">
+                            <label class="col-sm-2 control-lable" for="enabled">Enabled</label>
+							<div class="col-sm-4">
+								<select name="enabled" class="form-control input-sm" required
+						              ng-model="ctrl.user.enabled"
+						              ng-options="o.v as o.n for o in [{ n: 'false', v: false }, { n: 'true', v: true }]">
+								</select>
+                                <span ng-show="myForm.enabled.$dirty && myForm.enabled.$error.required">Enabled is a required field</span>
+							</div>                    
+                        </div>
+						<div class="form-group" >
+							<div class="col-sm-offset-2 col-sm-10">
+								<div ng-if="!ctrl.user.id">
+		                            <input type="submit"  value="Add" class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid">
+		                            <button type="button" ng-click="ctrl.reset()" class="btn btn-warning btn-sm" ng-disabled="myForm.$pristine">Reset</button>
+								</div>
+								<div ng-if="ctrl.user.id">
+		                            <input type="submit"  value="Update" class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid">
+		                            <button type="button" ng-click="ctrl.cancel()" class="btn btn-warning btn-sm" >Cancel</button>
+								</div>
+							</div>
+                        </div>
+                    </div>
+	                </form>
+	            </div>
+	        </div>    
+	     </div>    
+	</div>    
+	<div class="row">
+		<div class="col-lg-12">
+			<uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="alert.close()" dismiss-on-timeout="30000">{{ alert.msg }}</uib-alert>
+	        <div class="panel panel-default">
+	            <div class="panel-heading">List of Users</div>
+				<div class="panel-body">
+	                <table class="table table-bordered">
+				        <colgroup>
+							<col class="col-sm-1">
+							<col class="col-sm-3">
+							<col class="col-sm-3">
+							<col class="col-sm-2">
+							<col class="col-sm-1">
+							<col class="col-sm-2">
+				        </colgroup>
+	                    <thead>
+	                        <tr>
+	                            <th>ID</th>
+	                            <th><a href="" ng-click="order('displayName')">User Name 
+	                            <span class="glyphicon sort-icon" ng-show="filterParams.predicate=='displayName'" ng-class="{'glyphicon-chevron-up':filterParams.reverse,'glyphicon-chevron-down':!filterParams.reverse}"></span></a></th>
+	                            <th><a href="" ng-click="order('email')">Email 
+	                            <span class="glyphicon sort-icon" ng-show="filterParams.predicate=='email'" ng-class="{'glyphicon-chevron-up':filterParams.reverse,'glyphicon-chevron-down':!filterParams.reverse}"></span></a></th>
+	                            <th><a href="" ng-click="order('role.roledesc')">Role 
+	                            <span class="glyphicon sort-icon" ng-show="filterParams.predicate=='role.roledesc'" ng-class="{'glyphicon-chevron-up':filterParams.reverse,'glyphicon-chevron-down':!filterParams.reverse}"></span></a></th>
+	                            <th><a href="" ng-click="order('enabled')">Enabled 
+	                            <span class="glyphicon sort-icon" ng-show="filterParams.predicate=='enabled'" ng-class="{'glyphicon-chevron-up':filterParams.reverse,'glyphicon-chevron-down':!filterParams.reverse}"></span></a></th>
+	                        </tr>
+	                    </thead>
+	                    <tbody>
+				           <tr>  
+				             <td>Filter</td>  
+				             <td><input type="text" ng-model="filterParams.displayName" /></td>  
+				             <td><input type="text" ng-model="filterParams.email" /> </td>  
+				             <td><input type="text" ng-model="filterParams.role" /> </td>  
+				             <td><input type="text" ng-model="filterParams.enabled" /> </td>  
+				             <td style="text-align: center"><button type="button" ng-click="clearFilter()" class="btn btn-primary btn-sm">Clear Filter</button></td>  
+				           </tr>  
+	                        <tr ng-repeat="u in filteredList | filter:paginate">
+	                            <td><span ng-bind="u.id"></span></td>
+	                            <td><span ng-bind="u.displayName"></span></td>
+	                            <td><span ng-bind="u.email"></span></td>
+	                            <td><span ng-bind="u.role.roledesc"></span></td>
+	                            <td><span ng-bind="u.enabled"></span></td>
+	                            <td style="text-align: center">
+	                            <button type="button" ng-click="ctrl.edit(u.id)" class="btn btn-success btn-sm btn-sm">Edit</button>  
+	                            <button type="button" ng-click="ctrl.remove(u)" class="btn btn-danger btn-sm btn-smh">Remove</button>
+	                            </td>
+	                        </tr>
+	                    </tbody>
+						<tfoot> 
+							<tr> 
+								<td colspan="5">
+								    <uib-pagination 
+								      ng-model="currentPage"
+								      total-items="filteredList.length"
+								      items-per-page="numPerPage" 
+								      max-size="noOfPages"  
+								      boundary-links="true">
+								    </uib-pagination>
+								</td>
+							</tr> 
+						</tfoot>
+	                </table>
+	            </div>
+	        </div>
+	    </div>		
+	</div>
+</div>
+				    
