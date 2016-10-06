@@ -15,6 +15,7 @@
         <mapping class="com.trimark.backoffice.model.entity.User" />
         <mapping class="com.trimark.backoffice.model.entity.Role" />
         <mapping class="com.trimark.backoffice.model.entity.Permission" />
+        <mapping class="com.trimark.backoffice.model.entity.Organization" />
         <mapping class="com.trimark.backoffice.model.entity.Job" />
         <mapping class="com.trimark.backoffice.model.entity.Category" />
     </session-factory>

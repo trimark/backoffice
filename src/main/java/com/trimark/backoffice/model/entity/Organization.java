@@ -13,11 +13,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -45,6 +46,7 @@ public class Organization extends JPAEntity<Long> {
 	    inverseJoinColumns = { @JoinColumn(name = "parent_id", referencedColumnName = "id") } )
 	private Organization parent;
 	
+    @Fetch(value = FetchMode.SUBSELECT)
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "organizations_tree", 
 	    joinColumns = { @JoinColumn(name = "parent_id", referencedColumnName = "id") }, 

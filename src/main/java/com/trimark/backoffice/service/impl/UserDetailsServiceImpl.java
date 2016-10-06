@@ -14,7 +14,6 @@ import com.trimark.backoffice.model.entity.Role;
 import com.trimark.backoffice.model.entity.User;
 import com.trimark.backoffice.model.repository.UserRepository;
 import com.trimark.backoffice.service.UserDetailsService;
-import com.trimark.backoffice.unusedspringsecurity.UserRole;
 
 import java.util.*;
 
@@ -92,19 +91,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         for (Permission permission : role.getPermissions()) {
             Result.add(new SimpleGrantedAuthority(permission.getPermissionname()));
         }
-        return Result;
-    }
-
-    private List<GrantedAuthority> buildUserAuthority(Set<UserRole> userRoles) {
-        Set<GrantedAuthority> setAuths = new HashSet<>();
-
-        // Build user's authorities
-        for (UserRole userRole : userRoles) {
-            setAuths.add(new SimpleGrantedAuthority(userRole.getRole()));
-        }
-
-        List<GrantedAuthority> Result = new ArrayList<>(setAuths);
-
         return Result;
     }
 }
