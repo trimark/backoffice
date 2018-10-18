@@ -18,9 +18,9 @@
         <java.version>1.7</java.version>
         <jee.version>7.0</jee.version>
         <servletApi.version>6.1.11</servletApi.version>
-        <spring.version>4.1.6.RELEASE</spring.version>
+        <spring.version>5.1.1.RELEASE</spring.version>
 
-        <springSecurity.version>4.0.2.RELEASE</springSecurity.version>
+        <springSecurity.version>5.1.1.RELEASE</springSecurity.version>
         <!--springSecurity.version>3.2.3.RELEASE</springSecurity.version-->
         <springData.version>1.7.2.RELEASE</springData.version>
         <hibernate.version>4.0.1.Final</hibernate.version>
